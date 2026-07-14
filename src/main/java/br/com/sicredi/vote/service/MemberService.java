@@ -1,6 +1,10 @@
 package br.com.sicredi.vote.service;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import br.com.sicredi.vote.converter.MemberConverter;
 import br.com.sicredi.vote.dto.MemberRequestDTO;
@@ -28,11 +32,17 @@ public class MemberService {
 
         member = repository.save(member);
 
-        return MemberResponseDTO.builder()
-                .id(member.getId())
-                .document(member.getDocument())
-                .name(member.getName())
-                .build();
+        return converter.convertToDto(member);
+    }
+
+    public List<MemberResponseDTO> listMembers() {
+        List<Member> members = repository.findAll();
+
+        if (CollectionUtils.isEmpty(members)) {
+            return Collections.emptyList();
+        }
+
+        return members.stream().map(converter::convertToDto).toList();
     }
 
     private void validateMember(Member member) throws BusinessException {

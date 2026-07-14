@@ -1,8 +1,12 @@
 package br.com.sicredi.vote.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,5 +60,31 @@ public class MemberController {
         } catch (BusinessException e) {
             return new ResponseEntity<>(new ResponseDTO<>(new ResponseErrorDTO(e.getErrorCode(), e.getMessage())), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Tag(name = "Member APIs")
+    @Operation(
+            summary = "List all registered members",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Found at least one registered member."),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No members found."),
+            })
+    @GetMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ResponseDTO> listMembers() {
+        List<MemberResponseDTO> members = memberService.listMembers();
+
+        if (!CollectionUtils.isEmpty(members)) {
+            return ResponseEntity.ok(ResponseDTO.builder()
+                    .data(members)
+                    .build());
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }

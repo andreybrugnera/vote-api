@@ -1,8 +1,8 @@
 package br.com.sicredi.vote.converter;
 
-public interface Converter<E, D> {
+public interface Converter<E, Q, S> {
 
-    D convertToDto(E e);
+    S convertToDto(E e);
 
-    E convertFromDto(D d);
+    E convertFromDto(Q q);
 }

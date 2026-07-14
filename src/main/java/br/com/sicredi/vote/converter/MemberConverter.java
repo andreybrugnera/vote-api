@@ -5,15 +5,25 @@ import java.time.OffsetDateTime;
 import org.springframework.stereotype.Component;
 
 import br.com.sicredi.vote.dto.MemberRequestDTO;
+import br.com.sicredi.vote.dto.MemberResponseDTO;
 import br.com.sicredi.vote.model.Member;
 import br.com.sicredi.vote.model.MemberType;
 
 @Component
-public class MemberConverter extends DefaultConverter implements Converter<Member, MemberRequestDTO> {
+public class MemberConverter extends DefaultConverter
+        implements Converter<Member, MemberRequestDTO, MemberResponseDTO> {
 
     @Override
-    public MemberRequestDTO convertToDto(Member member) {
-        return member != null ? getModelMapper().map(member, MemberRequestDTO.class) : null;
+    public MemberResponseDTO convertToDto(Member member) {
+        if (member == null) {
+            return null;
+        }
+
+        return MemberResponseDTO.builder()
+                .id(member.getId())
+                .name(member.getName())
+                .document(member.getDocument())
+                .build();
     }
 
     @Override
