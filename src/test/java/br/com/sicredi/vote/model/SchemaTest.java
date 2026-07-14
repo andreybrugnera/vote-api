@@ -12,7 +12,7 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,19 +83,19 @@ class SchemaTest {
         return memberRepository.saveAndFlush(Member.builder()
                 .name("Member " + UUID.randomUUID())
                 .document("12345678901")
-                .createdAt(OffsetDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .build());
     }
 
     private Agenda saveAgenda() {
         return agendaRepository.saveAndFlush(Agenda.builder()
                 .description("Agenda description")
-                .createdAt(OffsetDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .build());
     }
 
     private VotingSession saveSession(Agenda agenda) {
-        OffsetDateTime now = OffsetDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
         return votingSessionRepository.saveAndFlush(VotingSession.builder()
                 .agenda(agenda)
                 .openedAt(now)
@@ -109,7 +109,7 @@ class SchemaTest {
                 .votingSession(session)
                 .member(member)
                 .choice(choice)
-                .createdAt(OffsetDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .build());
     }
 }

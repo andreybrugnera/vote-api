@@ -16,7 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -39,14 +39,14 @@ public class VotingSession {
     private Agenda agenda;
 
     @Column(name = "opened_at", nullable = false)
-    private OffsetDateTime openedAt;
+    private LocalDateTime openedAt;
 
     @Column(name = "closes_at", nullable = false)
-    private OffsetDateTime closesAt;
+    private LocalDateTime closesAt;
 
     @Column(name = "result_published_at")
-    private OffsetDateTime resultPublishedAt;
+    private LocalDateTime resultPublishedAt;
 
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
+    private LocalDateTime createdAt;
 }
