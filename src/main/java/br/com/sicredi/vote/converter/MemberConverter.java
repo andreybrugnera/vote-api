@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import br.com.sicredi.vote.dto.MemberRequestDTO;
 import br.com.sicredi.vote.dto.MemberResponseDTO;
 import br.com.sicredi.vote.model.Member;
-import br.com.sicredi.vote.model.MemberType;
 
 @Component
 public class MemberConverter extends DefaultConverter
@@ -33,7 +32,6 @@ public class MemberConverter extends DefaultConverter
         }
 
         Member member = getModelMapper().map(memberRequestDTO, Member.class);
-        member.setType(MemberType.ASSOCIATE);
         member.setCreatedAt(OffsetDateTime.now());
         return member;
     }

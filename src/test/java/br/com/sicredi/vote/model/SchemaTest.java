@@ -47,8 +47,7 @@ class SchemaTest {
         assertThat(persistedVote.getChoice()).isEqualTo(VoteChoice.YES);
         assertThat(persistedVote.getMember().getId()).isEqualTo(member.getId());
         assertThat(persistedVote.getVotingSession().getAgenda().getId()).isEqualTo(agenda.getId());
-        assertThat(memberRepository.findById(member.getId()).orElseThrow().getType())
-                .isEqualTo(MemberType.ASSOCIATE);
+        assertThat(memberRepository.findById(member.getId())).isPresent();
     }
 
     @Test
@@ -84,7 +83,6 @@ class SchemaTest {
         return memberRepository.saveAndFlush(Member.builder()
                 .name("Member " + UUID.randomUUID())
                 .document("12345678901")
-                .type(MemberType.ASSOCIATE)
                 .createdAt(OffsetDateTime.now())
                 .build());
     }

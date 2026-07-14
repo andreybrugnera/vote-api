@@ -2,8 +2,6 @@ package br.com.sicredi.vote.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,10 +34,6 @@ public class Member {
 
     @Column(name = "document", nullable = false, unique = true, length = 11)
     private String document;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false, length = 20)
-    private MemberType type;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
