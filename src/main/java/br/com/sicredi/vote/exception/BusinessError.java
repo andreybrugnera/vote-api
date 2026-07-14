@@ -1,20 +1,21 @@
 package br.com.sicredi.vote.exception;
 
+import org.springframework.http.HttpStatus;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum BusinessError {
 
-    EMPTY_MEMBER_NAME("M-001", "Member name cannot be empty."),
-    INVALID_MEMBER_DOCUMENT("M-002", "Provided document [{}] is invalid."),
-    NULL_MEMBER("M-003", "Member cannot be null."),
-    MEMBER_ALREADY_EXISTS("M-004", "Member with document [{}] already exists."),;
+    EMPTY_MEMBER_NAME("M-001", "Member name cannot be empty.", HttpStatus.BAD_REQUEST),
+    INVALID_MEMBER_DOCUMENT("M-002", "Provided document [{}] is invalid.", HttpStatus.BAD_REQUEST),
+    NULL_MEMBER("M-003", "Member cannot be null.", HttpStatus.BAD_REQUEST),
+    MEMBER_ALREADY_EXISTS("M-004", "Member with document [{}] already exists.", HttpStatus.BAD_REQUEST),
+    ;
 
     private final String code;
     private final String message;
-
-    BusinessError(String code, String message) {
-        this.code = code;
-        this.message = message;
-    }
+    private final HttpStatus httpStatus;
 }

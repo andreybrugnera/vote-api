@@ -2,7 +2,6 @@ package br.com.sicredi.vote.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -51,15 +50,11 @@ public class MemberController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ResponseDTO> createMember(@RequestBody MemberRequestDTO request) {
-        try {
-            MemberResponseDTO response = memberService.createMember(request);
-            return ResponseEntity.ok(ResponseDTO.builder()
-                    .data(response)
-                    .build());
-        } catch (BusinessException e) {
-            return new ResponseEntity<>(new ResponseDTO<>(new ResponseErrorDTO(e.getErrorCode(), e.getMessage())), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<ResponseDTO> createMember(@RequestBody MemberRequestDTO request) throws BusinessException {
+        MemberResponseDTO response = memberService.createMember(request);
+        return ResponseEntity.ok(ResponseDTO.builder()
+                .data(response)
+                .build());
     }
 
     @Tag(name = "Member APIs")
