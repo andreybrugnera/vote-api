@@ -17,9 +17,9 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseErrorDTO {
 
-    @Schema(description = "Error code.")
+    @Schema(description = "Error code", example = "M-001")
     private String errorCode;
 
-    @Schema(description = "Error detail.")
+    @Schema(description = "Error detail")
     private String detail;
 }

@@ -21,3 +21,7 @@ To run the application, you should set the environment variables below:
   - The database username
 - DB_PASSWD 
   - The database password
+
+## API Documentation
+
+The API documentation is available at http://localhost:8080/swagger-ui/index.html
