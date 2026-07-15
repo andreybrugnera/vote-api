@@ -24,6 +24,14 @@ public enum AppError {
     INVALID_OPEN_DATE("S-003", "Voting session open date [{}] must be after now.", HttpStatus.BAD_REQUEST),
     SESSION_ALREADY_EXISTS("S-004", "A voting session already exists for agenda [{}].", HttpStatus.BAD_REQUEST),
     VOTING_SESSION_NOT_FOUND("S-005", "Voting session with id [{}] was not found.", HttpStatus.NOT_FOUND),
+
+    NULL_VOTE("V-001", "Vote cannot be null.", HttpStatus.BAD_REQUEST),
+    NULL_VOTE_MEMBER_ID("V-002", "Member id must be provided.", HttpStatus.BAD_REQUEST),
+    NULL_VOTE_SESSION_ID("V-003", "Voting session id must be provided.", HttpStatus.BAD_REQUEST),
+    NULL_VOTE_CHOICE("V-004", "Vote choice must be provided.", HttpStatus.BAD_REQUEST),
+    VOTING_SESSION_NOT_OPEN("V-005", "Voting session is not open yet.", HttpStatus.BAD_REQUEST),
+    VOTING_SESSION_CLOSED("V-006", "Voting session is already closed.", HttpStatus.BAD_REQUEST),
+    MEMBER_ALREADY_VOTED("V-007", "Member [{}] has already voted on voting session [{}].", HttpStatus.BAD_REQUEST),
     ;
 
     private final String code;
