@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import br.com.sicredi.vote.dto.AgendaRequestDTO;
 import br.com.sicredi.vote.dto.AgendaResponseDTO;
 import br.com.sicredi.vote.model.Agenda;
+import br.com.sicredi.vote.model.AgendaStatus;
 
 class AgendaConverterTest {
 
@@ -22,6 +23,7 @@ class AgendaConverterTest {
         Agenda agenda = Agenda.builder()
                 .id(UUID.randomUUID())
                 .description(AGENDA_DESCRIPTION)
+                .status(AgendaStatus.WAITING_SESSION)
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -30,6 +32,7 @@ class AgendaConverterTest {
         assertThat(response).isNotNull();
         assertThat(response.getId()).isEqualTo(agenda.getId());
         assertThat(response.getDescription()).isEqualTo(AGENDA_DESCRIPTION);
+        assertThat(response.getStatus()).isEqualTo(AgendaStatus.WAITING_SESSION);
         assertThat(response.getCreatedAt()).isEqualTo(agenda.getCreatedAt());
     }
 
@@ -46,6 +49,7 @@ class AgendaConverterTest {
 
         assertThat(agenda).isNotNull();
         assertThat(agenda.getDescription()).isEqualTo(AGENDA_DESCRIPTION);
+        assertThat(agenda.getStatus()).isEqualTo(AgendaStatus.WAITING_SESSION);
         assertThat(agenda.getId()).isNull();
         assertThat(agenda.getCreatedAt()).isNotNull();
     }

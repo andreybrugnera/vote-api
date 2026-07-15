@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import br.com.sicredi.vote.dto.AgendaRequestDTO;
 import br.com.sicredi.vote.dto.AgendaResponseDTO;
 import br.com.sicredi.vote.model.Agenda;
+import br.com.sicredi.vote.model.AgendaStatus;
 
 @Component
 public class AgendaConverter extends DefaultConverter
@@ -21,6 +22,7 @@ public class AgendaConverter extends DefaultConverter
         return AgendaResponseDTO.builder()
                 .id(agenda.getId())
                 .description(agenda.getDescription())
+                .status(agenda.getStatus())
                 .createdAt(agenda.getCreatedAt())
                 .build();
     }
@@ -32,6 +34,7 @@ public class AgendaConverter extends DefaultConverter
         }
 
         Agenda agenda = getModelMapper().map(agendaRequestDTO, Agenda.class);
+        agenda.setStatus(AgendaStatus.WAITING_SESSION);
         agenda.setCreatedAt(LocalDateTime.now());
         return agenda;
     }
