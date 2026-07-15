@@ -90,6 +90,7 @@ class SchemaTest {
     private Agenda saveAgenda() {
         return agendaRepository.saveAndFlush(Agenda.builder()
                 .description("Agenda description")
+                .status(AgendaStatus.WAITING_SESSION)
                 .createdAt(LocalDateTime.now())
                 .build());
     }
@@ -100,6 +101,7 @@ class SchemaTest {
                 .agenda(agenda)
                 .openedAt(now)
                 .closesAt(now.plusMinutes(1))
+                .status(VotingSessionStatus.OPEN)
                 .createdAt(now)
                 .build());
     }

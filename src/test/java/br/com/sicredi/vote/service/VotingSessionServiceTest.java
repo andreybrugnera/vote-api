@@ -3,6 +3,7 @@ package br.com.sicredi.vote.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,8 +26,12 @@ import br.com.sicredi.vote.dto.VotingSessionResponseDTO;
 import br.com.sicredi.vote.exception.AppError;
 import br.com.sicredi.vote.exception.BusinessException;
 import br.com.sicredi.vote.model.Agenda;
+import br.com.sicredi.vote.model.AgendaStatus;
+import br.com.sicredi.vote.model.VoteChoice;
 import br.com.sicredi.vote.model.VotingSession;
+import br.com.sicredi.vote.model.VotingSessionStatus;
 import br.com.sicredi.vote.repository.AgendaRepository;
+import br.com.sicredi.vote.repository.VoteRepository;
 import br.com.sicredi.vote.repository.VotingSessionRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,6 +45,9 @@ class VotingSessionServiceTest {
 
     @Mock
     private AgendaRepository agendaRepository;
+
+    @Mock
+    private VoteRepository voteRepository;
 
     @InjectMocks
     private VotingSessionService service;
@@ -210,6 +218,97 @@ class VotingSessionServiceTest {
     void listsEmptyWhenThereAreNoVotingSessions() {
         when(repository.findAllByOrderByCreatedAtDesc()).thenReturn(List.of());
         assertThat(service.listVotingSessions()).isEmpty();
+    }
+
+    @Test
+    void approvesAgendaWhenYesGreaterThanNoVotes() {
+        Agenda agenda = Agenda.builder().id(UUID.randomUUID()).build();
+        VotingSession session = closedSession(agenda);
+
+        when(repository.findByStatusAndClosesAtBefore(eq(VotingSessionStatus.OPEN), any()))
+                .thenReturn(List.of(session));
+        when(voteRepository.countByVotingSessionIdAndChoice(session.getId(), VoteChoice.YES)).thenReturn(3L);
+        when(voteRepository.countByVotingSessionIdAndChoice(session.getId(), VoteChoice.NO)).thenReturn(1L);
+
+        service.computeVotingSessionsResult();
+
+        assertThat(agenda.getStatus()).isEqualTo(AgendaStatus.APPROVED);
+        assertThat(session.getStatus()).isEqualTo(VotingSessionStatus.CLOSED);
+        verify(agendaRepository).save(agenda);
+        verify(repository).save(session);
+    }
+
+    @Test
+    void rejectsAgendaWhenNoVotesGreaterThanYesVotes() {
+        Agenda agenda = Agenda.builder().id(UUID.randomUUID()).build();
+        VotingSession session = closedSession(agenda);
+
+        when(repository.findByStatusAndClosesAtBefore(eq(VotingSessionStatus.OPEN), any()))
+                .thenReturn(List.of(session));
+        when(voteRepository.countByVotingSessionIdAndChoice(session.getId(), VoteChoice.YES)).thenReturn(1L);
+        when(voteRepository.countByVotingSessionIdAndChoice(session.getId(), VoteChoice.NO)).thenReturn(2L);
+
+        service.computeVotingSessionsResult();
+
+        assertThat(agenda.getStatus()).isEqualTo(AgendaStatus.REJECTED);
+        assertThat(session.getStatus()).isEqualTo(VotingSessionStatus.CLOSED);
+        verify(agendaRepository).save(agenda);
+        verify(repository).save(session);
+    }
+
+    @Test
+    void rejectsAgendaWhenThereAreNoVotes() {
+        Agenda agenda = Agenda.builder().id(UUID.randomUUID()).build();
+        VotingSession session = closedSession(agenda);
+
+        when(repository.findByStatusAndClosesAtBefore(eq(VotingSessionStatus.OPEN), any()))
+                .thenReturn(List.of(session));
+        when(voteRepository.countByVotingSessionIdAndChoice(session.getId(), VoteChoice.YES)).thenReturn(0L);
+        when(voteRepository.countByVotingSessionIdAndChoice(session.getId(), VoteChoice.NO)).thenReturn(0L);
+
+        service.computeVotingSessionsResult();
+
+        assertThat(agenda.getStatus()).isEqualTo(AgendaStatus.REJECTED);
+        assertThat(session.getStatus()).isEqualTo(VotingSessionStatus.CLOSED);
+    }
+
+    @Test
+    void rejectsAgendaWhenResultIsDraw() {
+        Agenda agenda = Agenda.builder().id(UUID.randomUUID()).build();
+        VotingSession session = closedSession(agenda);
+
+        when(repository.findByStatusAndClosesAtBefore(eq(VotingSessionStatus.OPEN), any()))
+                .thenReturn(List.of(session));
+        when(voteRepository.countByVotingSessionIdAndChoice(session.getId(), VoteChoice.YES)).thenReturn(2L);
+        when(voteRepository.countByVotingSessionIdAndChoice(session.getId(), VoteChoice.NO)).thenReturn(2L);
+
+        service.computeVotingSessionsResult();
+
+        assertThat(agenda.getStatus()).isEqualTo(AgendaStatus.REJECTED);
+        assertThat(session.getStatus()).isEqualTo(VotingSessionStatus.CLOSED);
+    }
+
+    @Test
+    void computesNothingWhenThereAreNoClosedOpenSessions() {
+        when(repository.findByStatusAndClosesAtBefore(eq(VotingSessionStatus.OPEN), any()))
+                .thenReturn(List.of());
+
+        service.computeVotingSessionsResult();
+
+        verify(agendaRepository, never()).save(any());
+        verify(repository, never()).save(any());
+    }
+
+    private VotingSession closedSession(Agenda agenda) {
+        LocalDateTime now = LocalDateTime.now();
+        return VotingSession.builder()
+                .id(UUID.randomUUID())
+                .agenda(agenda)
+                .openedAt(now.minusMinutes(10))
+                .closesAt(now.minusMinutes(1))
+                .status(VotingSessionStatus.OPEN)
+                .createdAt(now.minusMinutes(10))
+                .build();
     }
 
     private VotingSession votingSession(UUID id, LocalDateTime openedAt, LocalDateTime closesAt) {
