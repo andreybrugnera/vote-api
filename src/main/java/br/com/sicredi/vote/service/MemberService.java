@@ -9,7 +9,7 @@ import org.springframework.util.CollectionUtils;
 import br.com.sicredi.vote.converter.MemberConverter;
 import br.com.sicredi.vote.dto.MemberRequestDTO;
 import br.com.sicredi.vote.dto.MemberResponseDTO;
-import br.com.sicredi.vote.exception.BusinessError;
+import br.com.sicredi.vote.exception.AppError;
 import br.com.sicredi.vote.exception.BusinessException;
 import br.com.sicredi.vote.model.Member;
 import br.com.sicredi.vote.repository.MemberRepository;
@@ -47,23 +47,23 @@ public class MemberService {
 
     private void validateMember(Member member) throws BusinessException {
         if (member == null) {
-            log.error(BusinessError.NULL_MEMBER.getMessage());
-            throw new BusinessException(BusinessError.NULL_MEMBER);
+            log.error(AppError.NULL_MEMBER.getMessage());
+            throw new BusinessException(AppError.NULL_MEMBER);
         }
 
         if (StringUtils.isBlank(member.getName())) {
-            log.error(BusinessError.EMPTY_MEMBER_NAME.getMessage());
-            throw new BusinessException(BusinessError.EMPTY_MEMBER_NAME);
+            log.error(AppError.EMPTY_MEMBER_NAME.getMessage());
+            throw new BusinessException(AppError.EMPTY_MEMBER_NAME);
         }
 
         if (!DocumentValidator.validateDocument(member.getDocument())) {
-            log.error(BusinessError.INVALID_MEMBER_DOCUMENT.getMessage(), member.getDocument());
-            throw new BusinessException(BusinessError.INVALID_MEMBER_DOCUMENT, member.getDocument());
+            log.error(AppError.INVALID_MEMBER_DOCUMENT.getMessage(), member.getDocument());
+            throw new BusinessException(AppError.INVALID_MEMBER_DOCUMENT, member.getDocument());
         }
 
         if (repository.findByDocument(member.getDocument()).isPresent()) {
-            log.error(BusinessError.MEMBER_ALREADY_EXISTS.getMessage(), member.getDocument());
-            throw new BusinessException(BusinessError.MEMBER_ALREADY_EXISTS, member.getDocument());
+            log.error(AppError.MEMBER_ALREADY_EXISTS.getMessage(), member.getDocument());
+            throw new BusinessException(AppError.MEMBER_ALREADY_EXISTS, member.getDocument());
         }
     }
 }

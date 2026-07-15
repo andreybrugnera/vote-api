@@ -11,7 +11,7 @@ public class BusinessException extends Exception {
     private final String errorCode;
     private final HttpStatus httpStatus;
 
-    public BusinessException(BusinessError error, String... params) {
+    public BusinessException(AppError error, String... params) {
         super(MessageFormatter.arrayFormat(error.getMessage(), params).getMessage());
         this.errorCode = error.getCode();
         this.httpStatus = error.getHttpStatus();

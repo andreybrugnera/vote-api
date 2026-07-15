@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import br.com.sicredi.vote.converter.MemberConverter;
 import br.com.sicredi.vote.dto.MemberRequestDTO;
 import br.com.sicredi.vote.dto.MemberResponseDTO;
-import br.com.sicredi.vote.exception.BusinessError;
+import br.com.sicredi.vote.exception.AppError;
 import br.com.sicredi.vote.exception.BusinessException;
 import br.com.sicredi.vote.model.Member;
 import br.com.sicredi.vote.repository.MemberRepository;
@@ -68,9 +68,9 @@ class MemberServiceTest {
 
         assertThatExceptionOfType(BusinessException.class)
                 .isThrownBy(() -> service.createMember(null))
-                .withMessage(BusinessError.NULL_MEMBER.getMessage())
+                .withMessage(AppError.NULL_MEMBER.getMessage())
                 .extracting(BusinessException::getErrorCode)
-                .isEqualTo(BusinessError.NULL_MEMBER.getCode());
+                .isEqualTo(AppError.NULL_MEMBER.getCode());
 
         verify(repository, never()).save(any());
     }
@@ -82,9 +82,9 @@ class MemberServiceTest {
 
         assertThatExceptionOfType(BusinessException.class)
                 .isThrownBy(() -> service.createMember(request))
-                .withMessage(BusinessError.EMPTY_MEMBER_NAME.getMessage())
+                .withMessage(AppError.EMPTY_MEMBER_NAME.getMessage())
                 .extracting(BusinessException::getErrorCode)
-                .isEqualTo(BusinessError.EMPTY_MEMBER_NAME.getCode());
+                .isEqualTo(AppError.EMPTY_MEMBER_NAME.getCode());
 
         verify(repository, never()).save(any());
     }
@@ -98,7 +98,7 @@ class MemberServiceTest {
                 .isThrownBy(() -> service.createMember(request))
                 .withMessage("Provided document [%s] is invalid.", INVALID_DOCUMENT)
                 .extracting(BusinessException::getErrorCode)
-                .isEqualTo(BusinessError.INVALID_MEMBER_DOCUMENT.getCode());
+                .isEqualTo(AppError.INVALID_MEMBER_DOCUMENT.getCode());
 
         verify(repository, never()).save(any());
     }
@@ -116,7 +116,7 @@ class MemberServiceTest {
                 .isThrownBy(() -> service.createMember(request))
                 .withMessage("Member with document [%s] already exists.", VALID_DOCUMENT)
                 .extracting(BusinessException::getErrorCode)
-                .isEqualTo(BusinessError.MEMBER_ALREADY_EXISTS.getCode());
+                .isEqualTo(AppError.MEMBER_ALREADY_EXISTS.getCode());
 
         verify(repository, never()).save(any());
     }
