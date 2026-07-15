@@ -13,6 +13,7 @@ public enum AppError {
     INVALID_MEMBER_DOCUMENT("M-002", "Provided document [{}] is invalid.", HttpStatus.BAD_REQUEST),
     NULL_MEMBER("M-003", "Member cannot be null.", HttpStatus.BAD_REQUEST),
     MEMBER_ALREADY_EXISTS("M-004", "Member with document [{}] already exists.", HttpStatus.BAD_REQUEST),
+    MEMBER_NOT_FOUND("M-005", "Member with id [{}] was not found.", HttpStatus.NOT_FOUND),
 
     EMPTY_AGENDA_DESCRIPTION("A-001", "Agenda description cannot be empty.", HttpStatus.BAD_REQUEST),
     NULL_AGENDA("A-002", "Agenda cannot be null.", HttpStatus.BAD_REQUEST),

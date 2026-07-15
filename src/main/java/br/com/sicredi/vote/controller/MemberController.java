@@ -1,11 +1,13 @@
 package br.com.sicredi.vote.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +54,30 @@ public class MemberController {
     )
     public ResponseEntity<ResponseDTO> createMember(@RequestBody MemberRequestDTO request) throws BusinessException {
         MemberResponseDTO response = memberService.createMember(request);
+        return ResponseEntity.ok(ResponseDTO.builder()
+                .data(response)
+                .build());
+    }
+
+    @Tag(name = "Members")
+    @Operation(
+            summary = "Get member by id",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Member found."),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Member not found.",
+                            content = @Content(schema =
+                            @Schema(implementation = ResponseErrorDTO.class)))
+            })
+    @GetMapping(
+            value = "/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ResponseDTO> getAgenda(@PathVariable UUID id) throws BusinessException {
+        MemberResponseDTO response = memberService.getMember(id);
         return ResponseEntity.ok(ResponseDTO.builder()
                 .data(response)
                 .build());

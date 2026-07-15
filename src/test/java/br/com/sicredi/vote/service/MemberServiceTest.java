@@ -122,6 +122,31 @@ class MemberServiceTest {
     }
 
     @Test
+    void getsMemberById() throws BusinessException {
+        Member member = member(UUID.randomUUID(), MEMBER_NAME, VALID_DOCUMENT);
+        MemberResponseDTO expectedResponse = responseOf(member);
+
+        when(repository.findById(member.getId())).thenReturn(Optional.of(member));
+        when(converter.convertToDto(member)).thenReturn(expectedResponse);
+
+        MemberResponseDTO response = service.getMember(member.getId());
+
+        assertThat(response).isSameAs(expectedResponse);
+    }
+
+    @Test
+    void rejectsGetWhenAgendaDoesNotExist() {
+        UUID id = UUID.randomUUID();
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> service.getMember(id))
+                .withMessage("Member with id [%s] was not found.", id)
+                .extracting(BusinessException::getErrorCode)
+                .isEqualTo(AppError.MEMBER_NOT_FOUND.getCode());
+    }
+
+    @Test
     void listsRegisteredMembers() {
         Member first = member(UUID.randomUUID(), MEMBER_NAME, VALID_DOCUMENT);
         Member second = member(UUID.randomUUID(), "Maria Silva", VALID_DOCUMENT_2);

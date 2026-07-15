@@ -2,6 +2,7 @@ package br.com.sicredi.vote.service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -31,6 +32,16 @@ public class MemberService {
         validateMember(member);
 
         member = repository.save(member);
+
+        return converter.convertToDto(member);
+    }
+
+    public MemberResponseDTO getMember(UUID id) throws BusinessException {
+        Member member = repository.findById(id)
+                .orElseThrow(() -> {
+                    log.error(AppError.MEMBER_NOT_FOUND.getMessage(), id);
+                    return new BusinessException(AppError.MEMBER_NOT_FOUND, String.valueOf(id));
+                });
 
         return converter.convertToDto(member);
     }
