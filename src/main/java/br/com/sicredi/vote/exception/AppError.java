@@ -18,6 +18,12 @@ public enum AppError {
     EMPTY_AGENDA_DESCRIPTION("A-001", "Agenda description cannot be empty.", HttpStatus.BAD_REQUEST),
     NULL_AGENDA("A-002", "Agenda cannot be null.", HttpStatus.BAD_REQUEST),
     AGENDA_NOT_FOUND("A-003", "Agenda with id [{}] was not found.", HttpStatus.NOT_FOUND),
+
+    NULL_VOTING_SESSION("S-001", "Voting session cannot be null.", HttpStatus.BAD_REQUEST),
+    NULL_AGENDA_ID("S-002", "Agenda id must be provided.", HttpStatus.BAD_REQUEST),
+    INVALID_OPEN_DATE("S-003", "Voting session open date [{}] must be after now.", HttpStatus.BAD_REQUEST),
+    SESSION_ALREADY_EXISTS("S-004", "A voting session already exists for agenda [{}].", HttpStatus.BAD_REQUEST),
+    VOTING_SESSION_NOT_FOUND("S-005", "Voting session with id [{}] was not found.", HttpStatus.NOT_FOUND),
     ;
 
     private final String code;
