@@ -1,0 +1,364 @@
+{
+  "info": {
+    "_postman_id": "8448aea9-1448-4b74-914b-ff01a8f3b3ae",
+    "name": "Vote-API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "2770410"
+  },
+  "item": [
+    {
+      "name": "Members",
+      "item": [
+        {
+          "name": "Register member",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var response = pm.response.json();",
+                  "",
+                  "pm.collectionVariables.set(\"member-id\", response.data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Andrey Brugnera\",\n    \"document\": \"31239856873\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/members",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "members"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List members",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/members",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "members"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get member",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/members/{{member-id}}",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "members",
+                "{{member-id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Agenda",
+      "item": [
+        {
+          "name": "Create agenda",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var response = pm.response.json();",
+                  "",
+                  "pm.collectionVariables.set(\"agenda-id\", response.data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"description\": \"Aprovação orçamento 2026\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/agendas",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "agendas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get agenda",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"description\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{server}}/agendas/{{agenda-id}}",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "agendas",
+                "{{agenda-id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List agendas",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"description\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{server}}/agendas",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "agendas"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Voting sessions",
+      "item": [
+        {
+          "name": "Create voting session",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var response = pm.response.json();",
+                  "",
+                  "pm.collectionVariables.set(\"voting-session-id\", response.data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"agendaId\": \"{{agenda-id}}\",\n    \"openedAt\": \"2026-07-15T12:15:00\",\n    \"closesAt\": \"2026-07-15T13:15:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/sessions",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "sessions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List voting sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/sessions",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "sessions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get voting session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/sessions/{{voting-session-id}}",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "sessions",
+                "{{voting-session-id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Vote",
+      "item": [
+        {
+          "name": "Register vote",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"votingSessionId\": \"{{voting-session-id}}\",\n    \"memberId\": \"{{member-id}}\",\n    \"choice\": \"YES\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/votes",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "votes"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "CPF validator",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://user-info.herokuapp.com/users/{cpf}",
+          "protocol": "https",
+          "host": [
+            "user-info",
+            "herokuapp",
+            "com"
+          ],
+          "path": [
+            "users",
+            "{cpf}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "server",
+      "value": ""
+    },
+    {
+      "key": "member-id",
+      "value": ""
+    },
+    {
+      "key": "agenda-id",
+      "value": ""
+    },
+    {
+      "key": "voting-session-id",
+      "value": ""
+    }
+  ]
+}
