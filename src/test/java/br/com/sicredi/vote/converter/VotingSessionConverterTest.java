@@ -3,6 +3,7 @@ package br.com.sicredi.vote.converter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -19,14 +20,14 @@ class VotingSessionConverterTest {
     @Test
     void convertsVotingSessionToResponseDto() {
         UUID agendaId = UUID.randomUUID();
-        LocalDateTime openedAt = LocalDateTime.now().plusMinutes(5);
+        LocalDateTime openedAt = LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5);
         VotingSession votingSession = VotingSession.builder()
                 .id(UUID.randomUUID())
                 .agenda(Agenda.builder().id(agendaId).build())
                 .openedAt(openedAt)
                 .closesAt(openedAt.plusMinutes(1))
                 .resultPublishedAt(openedAt.plusMinutes(2))
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.systemDefault()))
                 .build();
 
         VotingSessionResponseDTO response = converter.convertToDto(votingSession);
@@ -47,7 +48,7 @@ class VotingSessionConverterTest {
 
     @Test
     void convertsRequestDtoToVotingSession() {
-        LocalDateTime openedAt = LocalDateTime.now().plusMinutes(5);
+        LocalDateTime openedAt = LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5);
         VotingSessionRequestDTO request = new VotingSessionRequestDTO(UUID.randomUUID(), openedAt, null);
 
         VotingSession votingSession = converter.convertFromDto(request);

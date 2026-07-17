@@ -1,6 +1,7 @@
 package br.com.sicredi.vote.converter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.springframework.stereotype.Component;
 
@@ -37,7 +38,7 @@ public class VotingSessionConverter extends DefaultConverter
         return VotingSession.builder()
                 .openedAt(votingSessionRequestDTO.getOpenedAt())
                 .closesAt(votingSessionRequestDTO.getClosesAt())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.systemDefault()))
                 .build();
     }
 }

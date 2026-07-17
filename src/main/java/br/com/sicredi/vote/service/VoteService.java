@@ -1,6 +1,7 @@
 package br.com.sicredi.vote.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -88,7 +89,7 @@ public class VoteService {
     }
 
     private void validateVotingWindow(VotingSession votingSession) throws BusinessException {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
 
         if (now.isBefore(votingSession.getOpenedAt())) {
             log.error(AppError.VOTING_SESSION_NOT_OPEN.getMessage());

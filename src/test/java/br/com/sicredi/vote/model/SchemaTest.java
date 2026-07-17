@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,7 +84,7 @@ class SchemaTest {
         return memberRepository.saveAndFlush(Member.builder()
                 .name("Member " + UUID.randomUUID())
                 .document("12345678901")
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.systemDefault()))
                 .build());
     }
 
@@ -91,12 +92,12 @@ class SchemaTest {
         return agendaRepository.saveAndFlush(Agenda.builder()
                 .description("Agenda description")
                 .status(AgendaStatus.WAITING_SESSION)
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.systemDefault()))
                 .build());
     }
 
     private VotingSession saveSession(Agenda agenda) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
         return votingSessionRepository.saveAndFlush(VotingSession.builder()
                 .agenda(agenda)
                 .openedAt(now)
@@ -111,7 +112,7 @@ class SchemaTest {
                 .votingSession(session)
                 .member(member)
                 .choice(choice)
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.systemDefault()))
                 .build());
     }
 }

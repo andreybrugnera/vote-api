@@ -1,6 +1,7 @@
 package br.com.sicredi.vote.converter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.springframework.stereotype.Component;
 
@@ -35,7 +36,7 @@ public class AgendaConverter extends DefaultConverter
 
         Agenda agenda = getModelMapper().map(agendaRequestDTO, Agenda.class);
         agenda.setStatus(AgendaStatus.WAITING_SESSION);
-        agenda.setCreatedAt(LocalDateTime.now());
+        agenda.setCreatedAt(LocalDateTime.now(ZoneId.systemDefault()));
         return agenda;
     }
 }

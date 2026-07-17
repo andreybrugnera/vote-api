@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -171,7 +172,7 @@ class VoteServiceTest {
         UUID sessionId = UUID.randomUUID();
         VoteRequestDTO request = new VoteRequestDTO(sessionId, memberId, VoteChoice.YES);
         VotingSession session = session(sessionId,
-                LocalDateTime.now().plusMinutes(5), LocalDateTime.now().plusMinutes(10));
+                LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5), LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(10));
 
         when(converter.convertFromDto(request)).thenReturn(vote(null, VoteChoice.YES));
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(Member.builder().id(memberId).build()));
@@ -192,7 +193,7 @@ class VoteServiceTest {
         UUID sessionId = UUID.randomUUID();
         VoteRequestDTO request = new VoteRequestDTO(sessionId, memberId, VoteChoice.YES);
         VotingSession session = session(sessionId,
-                LocalDateTime.now().minusMinutes(10), LocalDateTime.now().minusMinutes(5));
+                LocalDateTime.now(ZoneId.systemDefault()).minusMinutes(10), LocalDateTime.now(ZoneId.systemDefault()).minusMinutes(5));
 
         when(converter.convertFromDto(request)).thenReturn(vote(null, VoteChoice.YES));
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(Member.builder().id(memberId).build()));
@@ -231,12 +232,12 @@ class VoteServiceTest {
         return Vote.builder()
                 .id(id)
                 .choice(choice)
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.systemDefault()))
                 .build();
     }
 
     private VotingSession openSession(UUID id) {
-        return session(id, LocalDateTime.now().minusMinutes(1), LocalDateTime.now().plusMinutes(1));
+        return session(id, LocalDateTime.now(ZoneId.systemDefault()).minusMinutes(1), LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(1));
     }
 
     private VotingSession session(UUID id, LocalDateTime openedAt, LocalDateTime closesAt) {
@@ -244,7 +245,7 @@ class VoteServiceTest {
                 .id(id)
                 .openedAt(openedAt)
                 .closesAt(closesAt)
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.systemDefault()))
                 .build();
     }
 }

@@ -3,6 +3,7 @@ package br.com.sicredi.vote.converter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class VoteConverterTest {
                 .votingSession(VotingSession.builder().id(votingSessionId).build())
                 .member(Member.builder().id(memberId).build())
                 .choice(VoteChoice.YES)
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.systemDefault()))
                 .build();
 
         VoteResponseDTO response = converter.convertToDto(vote);

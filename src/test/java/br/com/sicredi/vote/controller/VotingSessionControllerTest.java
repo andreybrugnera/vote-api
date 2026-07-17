@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,7 +45,7 @@ class VotingSessionControllerTest {
     void createsVotingSessionAndReturnsOk() throws Exception {
         UUID agendaId = UUID.randomUUID();
         UUID sessionId = UUID.randomUUID();
-        LocalDateTime openedAt = LocalDateTime.now().plusMinutes(5);
+        LocalDateTime openedAt = LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5);
         VotingSessionRequestDTO request = new VotingSessionRequestDTO(agendaId, openedAt, null);
         VotingSessionResponseDTO response = response(sessionId, agendaId, openedAt);
 
@@ -63,7 +64,7 @@ class VotingSessionControllerTest {
     void returnsBadRequestWhenSessionAlreadyExists() throws Exception {
         UUID agendaId = UUID.randomUUID();
         VotingSessionRequestDTO request =
-                new VotingSessionRequestDTO(agendaId, LocalDateTime.now().plusMinutes(5), null);
+                new VotingSessionRequestDTO(agendaId, LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5), null);
 
         when(votingSessionService.createVotingSession(any(VotingSessionRequestDTO.class)))
                 .thenThrow(new BusinessException(AppError.SESSION_ALREADY_EXISTS, String.valueOf(agendaId)));
@@ -82,7 +83,7 @@ class VotingSessionControllerTest {
     void returnsNotFoundWhenAgendaDoesNotExist() throws Exception {
         UUID agendaId = UUID.randomUUID();
         VotingSessionRequestDTO request =
-                new VotingSessionRequestDTO(agendaId, LocalDateTime.now().plusMinutes(5), null);
+                new VotingSessionRequestDTO(agendaId, LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5), null);
 
         when(votingSessionService.createVotingSession(any(VotingSessionRequestDTO.class)))
                 .thenThrow(new BusinessException(AppError.AGENDA_NOT_FOUND, String.valueOf(agendaId)));
@@ -98,7 +99,7 @@ class VotingSessionControllerTest {
     void getsVotingSessionByIdAndReturnsOk() throws Exception {
         UUID sessionId = UUID.randomUUID();
         UUID agendaId = UUID.randomUUID();
-        VotingSessionResponseDTO response = response(sessionId, agendaId, LocalDateTime.now().plusMinutes(5));
+        VotingSessionResponseDTO response = response(sessionId, agendaId, LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5));
 
         when(votingSessionService.getVotingSession(sessionId)).thenReturn(response);
 
@@ -131,9 +132,9 @@ class VotingSessionControllerTest {
     @Test
     void listsVotingSessionsAndReturnsOk() throws Exception {
         VotingSessionResponseDTO first =
-                response(UUID.randomUUID(), UUID.randomUUID(), LocalDateTime.now().plusMinutes(5));
+                response(UUID.randomUUID(), UUID.randomUUID(), LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5));
         VotingSessionResponseDTO second =
-                response(UUID.randomUUID(), UUID.randomUUID(), LocalDateTime.now().plusMinutes(10));
+                response(UUID.randomUUID(), UUID.randomUUID(), LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(10));
 
         when(votingSessionService.listVotingSessions()).thenReturn(List.of(first, second));
 

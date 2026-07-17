@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,7 +56,7 @@ class VotingSessionServiceTest {
     @Test
     void createsVotingSessionWhenRequestIsValid() throws BusinessException {
         UUID agendaId = UUID.randomUUID();
-        LocalDateTime openedAt = LocalDateTime.now().plusMinutes(5);
+        LocalDateTime openedAt = LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5);
         VotingSessionRequestDTO request = new VotingSessionRequestDTO(agendaId, openedAt, openedAt.plusMinutes(10));
         VotingSession converted = votingSession(null, openedAt, openedAt.plusMinutes(10));
         Agenda agenda = Agenda.builder().id(agendaId).build();
@@ -78,7 +79,7 @@ class VotingSessionServiceTest {
     @Test
     void defaultsClosesAtToOneMinuteAfterOpenedAt() throws BusinessException {
         UUID agendaId = UUID.randomUUID();
-        LocalDateTime openedAt = LocalDateTime.now().plusMinutes(5);
+        LocalDateTime openedAt = LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5);
         VotingSessionRequestDTO request = new VotingSessionRequestDTO(agendaId, openedAt, null);
         VotingSession converted = votingSession(null, openedAt, null);
 
@@ -110,7 +111,7 @@ class VotingSessionServiceTest {
 
     @Test
     void rejectsVotingSessionWithoutAgendaId() {
-        LocalDateTime openedAt = LocalDateTime.now().plusMinutes(5);
+        LocalDateTime openedAt = LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5);
         VotingSessionRequestDTO request = new VotingSessionRequestDTO(null, openedAt, null);
         when(converter.convertFromDto(request)).thenReturn(votingSession(null, openedAt, null));
 
@@ -126,7 +127,7 @@ class VotingSessionServiceTest {
     @Test
     void rejectsVotingSessionWithOpenDateInThePast() {
         UUID agendaId = UUID.randomUUID();
-        LocalDateTime openedAt = LocalDateTime.now().minusMinutes(1);
+        LocalDateTime openedAt = LocalDateTime.now(ZoneId.systemDefault()).minusMinutes(1);
         VotingSessionRequestDTO request = new VotingSessionRequestDTO(agendaId, openedAt, null);
         when(converter.convertFromDto(request)).thenReturn(votingSession(null, openedAt, null));
 
@@ -141,7 +142,7 @@ class VotingSessionServiceTest {
     @Test
     void rejectsVotingSessionWhenSessionAlreadyExistsForAgenda() {
         UUID agendaId = UUID.randomUUID();
-        LocalDateTime openedAt = LocalDateTime.now().plusMinutes(5);
+        LocalDateTime openedAt = LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5);
         VotingSessionRequestDTO request = new VotingSessionRequestDTO(agendaId, openedAt, null);
 
         when(converter.convertFromDto(request)).thenReturn(votingSession(null, openedAt, null));
@@ -159,7 +160,7 @@ class VotingSessionServiceTest {
     @Test
     void rejectsVotingSessionWhenAgendaDoesNotExist() {
         UUID agendaId = UUID.randomUUID();
-        LocalDateTime openedAt = LocalDateTime.now().plusMinutes(5);
+        LocalDateTime openedAt = LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5);
         VotingSessionRequestDTO request = new VotingSessionRequestDTO(agendaId, openedAt, null);
 
         when(converter.convertFromDto(request)).thenReturn(votingSession(null, openedAt, null));
@@ -177,7 +178,7 @@ class VotingSessionServiceTest {
 
     @Test
     void getsVotingSessionById() throws BusinessException {
-        VotingSession votingSession = votingSession(UUID.randomUUID(), LocalDateTime.now().plusMinutes(5), null);
+        VotingSession votingSession = votingSession(UUID.randomUUID(), LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5), null);
         VotingSessionResponseDTO expectedResponse = VotingSessionResponseDTO.builder().id(votingSession.getId()).build();
 
         when(repository.findById(votingSession.getId())).thenReturn(Optional.of(votingSession));
@@ -202,8 +203,8 @@ class VotingSessionServiceTest {
 
     @Test
     void listsRegisteredVotingSessions() {
-        VotingSession first = votingSession(UUID.randomUUID(), LocalDateTime.now().plusMinutes(5), null);
-        VotingSession second = votingSession(UUID.randomUUID(), LocalDateTime.now().plusMinutes(6), null);
+        VotingSession first = votingSession(UUID.randomUUID(), LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(5), null);
+        VotingSession second = votingSession(UUID.randomUUID(), LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(6), null);
         VotingSessionResponseDTO firstResponse = VotingSessionResponseDTO.builder().id(first.getId()).build();
         VotingSessionResponseDTO secondResponse = VotingSessionResponseDTO.builder().id(second.getId()).build();
 
@@ -300,7 +301,7 @@ class VotingSessionServiceTest {
     }
 
     private VotingSession closedSession(Agenda agenda) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
         return VotingSession.builder()
                 .id(UUID.randomUUID())
                 .agenda(agenda)
@@ -316,7 +317,7 @@ class VotingSessionServiceTest {
                 .id(id)
                 .openedAt(openedAt)
                 .closesAt(closesAt)
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.systemDefault()))
                 .build();
     }
 }

@@ -1,11 +1,13 @@
 package br.com.sicredi.vote.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import br.com.sicredi.vote.converter.VotingSessionConverter;
@@ -78,9 +80,10 @@ public class VotingSessionService {
      * Computes all the Voting Session
      * that are still OPEN and closeAt < now
      */
+    @Transactional
     public void computeVotingSessionsResult() {
         List<VotingSession> sessionsToClose =
-                repository.findByStatusAndClosesAtBefore(VotingSessionStatus.OPEN, LocalDateTime.now());
+                repository.findByStatusAndClosesAtBefore(VotingSessionStatus.OPEN, LocalDateTime.now(ZoneId.systemDefault()));
 
         sessionsToClose.forEach(votingSession -> {
             log.info("Computing results for voting session {}", votingSession.getId());
@@ -119,7 +122,7 @@ public class VotingSessionService {
             throw new BusinessException(AppError.NULL_AGENDA_ID);
         }
 
-        if (votingSession.getOpenedAt() == null || !votingSession.getOpenedAt().isAfter(LocalDateTime.now())) {
+        if (votingSession.getOpenedAt() == null || !votingSession.getOpenedAt().isAfter(LocalDateTime.now(ZoneId.systemDefault()))) {
             log.error(AppError.INVALID_OPEN_DATE.getMessage(), votingSession.getOpenedAt());
             throw new BusinessException(AppError.INVALID_OPEN_DATE, String.valueOf(votingSession.getOpenedAt()));
         }

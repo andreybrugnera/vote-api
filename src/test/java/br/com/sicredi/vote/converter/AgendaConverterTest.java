@@ -3,6 +3,7 @@ package br.com.sicredi.vote.converter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ class AgendaConverterTest {
                 .id(UUID.randomUUID())
                 .description(AGENDA_DESCRIPTION)
                 .status(AgendaStatus.WAITING_SESSION)
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.systemDefault()))
                 .build();
 
         AgendaResponseDTO response = converter.convertToDto(agenda);

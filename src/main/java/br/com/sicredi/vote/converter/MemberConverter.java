@@ -1,6 +1,7 @@
 package br.com.sicredi.vote.converter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.springframework.stereotype.Component;
 
@@ -32,7 +33,7 @@ public class MemberConverter extends DefaultConverter
         }
 
         Member member = getModelMapper().map(memberRequestDTO, Member.class);
-        member.setCreatedAt(LocalDateTime.now());
+        member.setCreatedAt(LocalDateTime.now(ZoneId.systemDefault()));
         return member;
     }
 }
